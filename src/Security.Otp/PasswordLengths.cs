@@ -4,7 +4,7 @@ namespace Security.Otp
     /// <summary>
     /// Represents the length of a One-Time Password.
     /// </summary>
-    public abstract class PasscodeLengths
+    public abstract class PasswordLengths
     {
         private static readonly IPasswordLength sixDigitPassword = new PasswordLength(6);
         private static readonly IPasswordLength eightDigitPassword = new PasswordLength(8);

@@ -19,7 +19,7 @@ namespace Security.Otp.Test
             var otpGenerator = new TotpGenerator();
 
             // Act
-            var password = otpGenerator.GeneratePassword(rfcSecret, dateTime, 30, PasscodeLengths.EightDigitPassword);
+            var password = otpGenerator.GeneratePassword(rfcSecret, dateTime, 30, PasswordLengths.EightDigitPassword);
 
             // Assert
             Assert.Equal(expectedPassword, password);
