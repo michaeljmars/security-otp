@@ -1,0 +1,56 @@
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+# version format
+version: 1.0.{build}
+
+# you can use {branch} name in version format too
+# version: 1.0.{build}-{branch}
+
+#---------------------------------#
+#    environment configuration    #
+#---------------------------------#
+
+# Build worker image (VM template)
+image: Visual Studio 2017 RC
+
+# scripts that are called at very beginning, before repo cloning
+init:
+  - git config --global core.autocrlf true
+
+# build cache to preserve files/folders between builds
+cache:
+  - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+
+# scripts that run after cloning repository
+install:
+  - dotnet --version
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+# build Configuration, i.e. Debug, Release, etc.
+configuration:
+- Debug
+- Release
+
+# scripts to run before build
+before_build:
+- appveyor-retry dotnet restore -v Minimal
+
+# to run your custom scripts instead of automatic MSBuild
+build_script:
+- dotnet build -c %CONFIGURATION%
+
+#---------------------------------#
+#       tests configuration       #
+#---------------------------------#
+
+# to run your custom scripts instead of automatic tests
+test_script:
+- dotnet test -c %CONFIGURATION% ./test/Security.Otp.Test/Security.Otp.Test.csproj
+
+# to disable automatic tests
+#test: off
