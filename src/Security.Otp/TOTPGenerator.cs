@@ -14,7 +14,8 @@ namespace Security.Otp
             }
 
             TimeSpan span = (DateTime.Now.ToUniversalTime() - Epoch);
-            return Otp.Hotp.GeneratePassword(key, (int)span.TotalSeconds / 60, length);
+
+            return this.GeneratePassword(key, DateTime.UtcNow, 60, length);
         }
 
         public string GeneratePassword(byte[] key, int step, IPasswordLength length)
@@ -29,8 +30,7 @@ namespace Security.Otp
                 throw new ArgumentOutOfRangeException(nameof(step), "A positive value must be supplied for step.");
             }
 
-            TimeSpan span = (DateTime.Now.ToUniversalTime() - Epoch);
-            return Otp.Hotp.GeneratePassword(key, (int)span.TotalSeconds / step, length);
+            return this.GeneratePassword(key, DateTime.UtcNow, step, length);
         }
 
         internal string GeneratePassword(byte[] key, DateTime date, int step, IPasswordLength length)
