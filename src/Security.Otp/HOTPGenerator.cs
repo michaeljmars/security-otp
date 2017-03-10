@@ -42,26 +42,26 @@ namespace Security.Otp
 
             using (var hmac = new HMACSHA1(key))
             {
-                var text = BitConverter.GetBytes(counter);
-                Array.Reverse(text);
-
-                var passcode = hmac.ComputeHash(text);
-                return GeneratePassword(passcode, length);
+                return GeneratePassword(key, counter, length, hmac);
             }
         }
 
-        private static string GeneratePassword(byte[] hmac, IPasswordLength length)
+        internal string GeneratePassword(byte[] key, long counter, IPasswordLength length, HMAC hmac)
         {
-            int offset = hmac[19] & 0xf;
+            var text = BitConverter.GetBytes(counter);
+            Array.Reverse(text);
 
-            int bin_code = (hmac[offset] & 0x7f) << 24
-                | (hmac[offset + 1] & 0xff) << 16
-                | (hmac[offset + 2] & 0xff) << 8
-                | (hmac[offset + 3] & 0xff);
+            var hash = hmac.ComputeHash(text);
+            int offset = hash[19] & 0xf;
 
-            int otp = bin_code % digits[length.Digits];
+            int binary = (hash[offset] & 0x7f) << 24
+                | (hash[offset + 1] & 0xff) << 16
+                | (hash[offset + 2] & 0xff) << 8
+                | (hash[offset + 3] & 0xff);
 
-            return otp.ToString(length.Format);
+            int password = binary % digits[length.Digits];
+
+            return password.ToString(length.Format);
         }
     }
 }
