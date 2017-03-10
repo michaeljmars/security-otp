@@ -27,6 +27,8 @@ namespace Security.Otp
     {
         int Digits { get; }
 
+        int Power { get; }
+
         string Format { get; }
     }
 
@@ -35,7 +37,7 @@ namespace Security.Otp
     /// </summary>
     internal class PasswordLength : IPasswordLength
     {
-        private static readonly int[] digits = new int[]
+        private static readonly int[] powers = new int[]
         {
             1,        // 0
             10,       // 1
@@ -51,14 +53,17 @@ namespace Security.Otp
         /// <summary>
         /// Initializes a new instance of the <see cref="PasswordLength"/> class that represents the specified length.
         /// </summary>
-        /// <param name="length">The desired password length.</param>
-        public PasswordLength(int length)
+        /// <param name="digits">The desired password length.</param>
+        public PasswordLength(int digits)
         {
-            this.Digits = digits[length];
-            this.Format = $"D{length}";
+            this.Digits = digits;
+            this.Power = powers[digits];
+            this.Format = $"D{digits}";
         }
 
         public int Digits { get; }
+
+        public int Power { get; }
 
         public string Format { get; }
     }

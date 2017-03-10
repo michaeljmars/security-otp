@@ -46,7 +46,7 @@ namespace Security.Otp
                 | (hash[offset + 2] & 0xff) << 8
                 | (hash[offset + 3] & 0xff);
 
-            int password = binary % length.Digits;
+            int password = binary % length.Power;
 
             return password.ToString(length.Format);
         }
