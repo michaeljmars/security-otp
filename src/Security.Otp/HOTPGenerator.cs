@@ -27,7 +27,7 @@ namespace Security.Otp
                     "Only passwords of between 1 and 8 digits in length can be generated.");
             }
 
-            using (var hmac = new HMACSHA1(key))
+            using (var hmac = new HMACSHA1())
             {
                 return GeneratePassword(key, counter, length, hmac);
             }
@@ -36,10 +36,16 @@ namespace Security.Otp
         internal string GeneratePassword(byte[] key, long counter, IPasswordLength length, HMAC hmac)
         {
             var text = BitConverter.GetBytes(counter);
+            if (!BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(text);
+            }
+            Array.Resize(ref text, 8);
             Array.Reverse(text);
 
+            hmac.Key = key;
             var hash = hmac.ComputeHash(text);
-            int offset = hash[19] & 0xf;
+            int offset = hash[hash.Length - 1] & 0xf;
 
             int binary = (hash[offset] & 0x7f) << 24
                 | (hash[offset + 1] & 0xff) << 16
