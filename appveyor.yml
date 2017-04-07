@@ -17,8 +17,6 @@ image: Visual Studio 2017
 
 # scripts that are called at very beginning, before repo cloning
 init:
-  - Write-Host $(Get-Date).ToString()
-  - Write-Host £(Get-Culture).ToString()
   - git config --global core.autocrlf true
 
 # build cache to preserve files/folders between builds
@@ -27,6 +25,8 @@ cache:
 
 # scripts that run after cloning repository
 install:
+  - ps: Write-Host $(Get-Date).ToString()
+  - ps: Write-Host £(Get-Culture).ToString()
   - dotnet --info
 
 #---------------------------------#
