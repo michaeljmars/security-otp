@@ -61,7 +61,7 @@ namespace Security.Otp
         internal string GeneratePassword(byte[] key, DateTime date, int step, IPasswordLength length, HMAC hmac)
         {
             TimeSpan span = (date.ToUniversalTime() - Epoch);
-            return Otp.Hotp.GeneratePassword(key, (int)span.TotalSeconds / step, length, hmac);
+            return Otp.Hotp.GeneratePassword(key, (long)span.TotalSeconds / step, length, hmac);
         }
     }
 }
