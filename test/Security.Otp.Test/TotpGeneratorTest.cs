@@ -6,8 +6,6 @@ namespace Security.Otp.Test
 {
     public class TotpGeneratorTest
     {
-        private static readonly CultureInfo culture = new CultureInfo("en-GB");
-
         private static readonly byte[] sha1RfcSecret = new byte[]
         {
             0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x30,
@@ -39,7 +37,7 @@ namespace Security.Otp.Test
         public void OneTimePassword_UsingSHA1_IsGeneratedCorrectlyForRfcTests(string dateTimeString, string expectedPassword)
         {
             // Arrange
-            var dateTime = DateTime.ParseExact(dateTimeString, "yyyy-MM-dd HH:mm:ss", culture);
+            var dateTime = DateTime.ParseExact(dateTimeString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
 
             var otpGenerator = new TotpGenerator();
 
@@ -56,7 +54,7 @@ namespace Security.Otp.Test
         public void OneTimePassword_UsingSHA256_IsGeneratedCorrectlyForRfcTests(string dateTimeString, string expectedPassword)
         {
             // Arrange
-            var dateTime = DateTime.ParseExact(dateTimeString, "yyyy-MM-dd HH:mm:ss", culture);
+            var dateTime = DateTime.ParseExact(dateTimeString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
 
             var otpGenerator = new TotpGenerator();
 
@@ -73,7 +71,7 @@ namespace Security.Otp.Test
         public void OneTimePassword_UsingSHA512_IsGeneratedCorrectlyForRfcTests(string dateTimeString, string expectedPassword)
         {
             // Arrange
-            var dateTime = DateTime.ParseExact(dateTimeString, "yyyy-MM-dd HH:mm:ss", culture);
+            var dateTime = DateTime.ParseExact(dateTimeString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
 
             var otpGenerator = new TotpGenerator();
 
