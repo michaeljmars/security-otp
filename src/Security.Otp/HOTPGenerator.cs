@@ -5,19 +5,6 @@ namespace Security.Otp
 {
     public class HotpGenerator : IHotpGenerator
     {
-        private static readonly int[] digits = new int[]
-        {
-            1,        // 0
-            10,       // 1
-            100,      // 2
-            1000,     // 3
-            10000,    // 4
-            100000,   // 5
-            1000000,  // 6
-            10000000, // 7
-            100000000 // 8
-        };
-
         /// <inheritdoc/>
         public string GeneratePassword(byte[] key, long counter, IPasswordLength length)
         {
@@ -40,28 +27,34 @@ namespace Security.Otp
                     "Only passwords of between 1 and 8 digits in length can be generated.");
             }
 
-            using (var hmac = new HMACSHA1(key))
+            using (var hmac = new HMACSHA1())
             {
-                var text = BitConverter.GetBytes(counter);
-                Array.Reverse(text);
-
-                var passcode = hmac.ComputeHash(text);
-                return GeneratePassword(passcode, length);
+                return GeneratePassword(key, counter, length, hmac);
             }
         }
 
-        private static string GeneratePassword(byte[] hmac, IPasswordLength length)
+        internal string GeneratePassword(byte[] key, long counter, IPasswordLength length, HMAC hmac)
         {
-            int offset = hmac[19] & 0xf;
+            var text = BitConverter.GetBytes(counter);
+            if (!BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(text);
+            }
+            Array.Resize(ref text, 8);
+            Array.Reverse(text);
 
-            int bin_code = (hmac[offset] & 0x7f) << 24
-                | (hmac[offset + 1] & 0xff) << 16
-                | (hmac[offset + 2] & 0xff) << 8
-                | (hmac[offset + 3] & 0xff);
+            hmac.Key = key;
+            var hash = hmac.ComputeHash(text);
+            int offset = hash[hash.Length - 1] & 0xf;
 
-            int otp = bin_code % digits[length.Digits];
+            int binary = (hash[offset] & 0x7f) << 24
+                | (hash[offset + 1] & 0xff) << 16
+                | (hash[offset + 2] & 0xff) << 8
+                | (hash[offset + 3] & 0xff);
 
-            return otp.ToString(length.Format);
+            int password = binary % length.Power;
+
+            return password.ToString(length.Format);
         }
     }
 }

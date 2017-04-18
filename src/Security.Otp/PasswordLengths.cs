@@ -4,7 +4,7 @@ namespace Security.Otp
     /// <summary>
     /// Represents the length of a One-Time Password.
     /// </summary>
-    public abstract class PasscodeLengths
+    public abstract class PasswordLengths
     {
         private static readonly IPasswordLength sixDigitPassword = new PasswordLength(6);
         private static readonly IPasswordLength eightDigitPassword = new PasswordLength(8);
@@ -27,6 +27,8 @@ namespace Security.Otp
     {
         int Digits { get; }
 
+        int Power { get; }
+
         string Format { get; }
     }
 
@@ -35,6 +37,19 @@ namespace Security.Otp
     /// </summary>
     internal class PasswordLength : IPasswordLength
     {
+        private static readonly int[] powers = new int[]
+        {
+            1,        // 0
+            10,       // 1
+            100,      // 2
+            1000,     // 3
+            10000,    // 4
+            100000,   // 5
+            1000000,  // 6
+            10000000, // 7
+            100000000 // 8
+        };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PasswordLength"/> class that represents the specified length.
         /// </summary>
@@ -42,10 +57,13 @@ namespace Security.Otp
         public PasswordLength(int digits)
         {
             this.Digits = digits;
+            this.Power = powers[digits];
             this.Format = $"D{digits}";
         }
 
         public int Digits { get; }
+
+        public int Power { get; }
 
         public string Format { get; }
     }
