@@ -25,8 +25,6 @@ cache:
 
 # scripts that run after cloning repository
 install:
-  - ps: Write-Host $(Get-Date).ToString()
-  - ps: Write-Host £(Get-Culture).ToString()
   - dotnet --info
 
 #---------------------------------#
@@ -53,6 +51,3 @@ build_script:
 # to run your custom scripts instead of automatic tests
 test_script:
 - dotnet test -c %CONFIGURATION% ./test/Security.Otp.Test/Security.Otp.Test.csproj
-
-# to disable automatic tests
-#test: off
