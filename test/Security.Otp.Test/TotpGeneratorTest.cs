@@ -46,7 +46,7 @@ namespace Security.Otp.Test
             var otpGenerator = new TotpGenerator();
 
             // Act
-            var password = otpGenerator.GeneratePassword(sha1RfcSecret, dateTime, 30, PasswordLengths.EightDigitPassword, Hmac.Sha1);
+            var password = otpGenerator.GeneratePassword(sha1RfcSecret, dateTime, 30, PasswordLength.Of(8), Hmac.Sha1);
 
             // Assert
             Assert.Equal(expectedPassword, password);
@@ -67,7 +67,7 @@ namespace Security.Otp.Test
             var otpGenerator = new TotpGenerator();
 
             // Act
-            var password = otpGenerator.GeneratePassword(sha256RfcSecret, dateTime, 30, PasswordLengths.EightDigitPassword, Hmac.Sha256);
+            var password = otpGenerator.GeneratePassword(sha256RfcSecret, dateTime, 30, PasswordLength.Of(8), Hmac.Sha256);
 
             // Assert
             Assert.Equal(expectedPassword, password);
@@ -88,7 +88,7 @@ namespace Security.Otp.Test
             var otpGenerator = new TotpGenerator();
 
             // Act
-            var password = otpGenerator.GeneratePassword(sha512RfcSecret, dateTime, 30, PasswordLengths.EightDigitPassword, Hmac.Sha512);
+            var password = otpGenerator.GeneratePassword(sha512RfcSecret, dateTime, 30, PasswordLength.Of(8), Hmac.Sha512);
 
             // Assert
             Assert.Equal(expectedPassword, password);

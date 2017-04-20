@@ -30,7 +30,7 @@ namespace Security.Otp.Test
             var otpGenerator = new HotpGenerator();
 
             // Act
-            var password = otpGenerator.GeneratePassword(rfcSecret, counter, PasswordLengths.SixDigitPassword);
+            var password = otpGenerator.GeneratePassword(rfcSecret, counter, PasswordLength.Of(6));
 
             // Assert
             Assert.Equal(expectedPassword, password);
@@ -45,7 +45,7 @@ namespace Security.Otp.Test
             var otpGenerator = new HotpGenerator();
 
             // Act
-            var password = otpGenerator.GeneratePassword(googleSecret, counter, PasswordLengths.SixDigitPassword);
+            var password = otpGenerator.GeneratePassword(googleSecret, counter, PasswordLength.Of(6));
 
             // Assert
             Assert.Equal(expectedPassword, password);
@@ -62,7 +62,7 @@ namespace Security.Otp.Test
             var otpGenerator = new HotpGenerator();
 
             // Act
-            var password = otpGenerator.GeneratePassword(secret, 0, new PasswordLength(expectedLength));
+            var password = otpGenerator.GeneratePassword(secret, 0, PasswordLength.Of(expectedLength));
 
             // Assert
             Assert.Equal(password.Length, expectedLength);
@@ -84,7 +84,7 @@ namespace Security.Otp.Test
             var otpGenerator = new HotpGenerator();
 
             // Act
-            var password = otpGenerator.GeneratePassword(secret, counter, PasswordLengths.SixDigitPassword);
+            var password = otpGenerator.GeneratePassword(secret, counter, PasswordLength.Of(6));
 
             // Assert
             Assert.True(int.TryParse(password, out int temp));

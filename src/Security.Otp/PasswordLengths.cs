@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace Security.Otp
 {
     /// <summary>
@@ -35,7 +37,7 @@ namespace Security.Otp
     /// <summary>
     /// The length of a One-Time Password.
     /// </summary>
-    internal class PasswordLength : IPasswordLength
+    public class PasswordLength : IPasswordLength
     {
         private static readonly int[] powers = new int[]
         {
@@ -54,7 +56,7 @@ namespace Security.Otp
         /// Initializes a new instance of the <see cref="PasswordLength"/> class that represents the specified length.
         /// </summary>
         /// <param name="digits">The desired password length.</param>
-        public PasswordLength(int digits)
+        internal PasswordLength(int digits)
         {
             this.Digits = digits;
             this.Power = powers[digits];
@@ -66,5 +68,20 @@ namespace Security.Otp
         public int Power { get; }
 
         public string Format { get; }
+
+        /// <summary>
+        /// Generates a new <see cref="IPasswordLength"/> instance for the specified length.
+        /// </summary>
+        /// <param name="digits">The desired password length.</param>
+        /// <returns>An instance representing the length of password specified by <paramref name="digits"/>.</returns>
+        public static IPasswordLength Of(int digits)
+        {
+            if (digits == 8) return PasswordLengths.EightDigitPassword;
+            if (digits == 6) return PasswordLengths.SixDigitPassword;
+
+            if (digits < 0 || digits > 8) throw new ArgumentOutOfRangeException(nameof(digits), $"A password of {digits} in length cannot be created. Only passwords with a length between 0 and 8 (inclusive) are supported.");
+
+            return new PasswordLength(digits);
+        }
     }
 }
